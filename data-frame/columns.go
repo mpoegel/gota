@@ -139,3 +139,38 @@ func (col column) NA() []bool {
 	}
 	return naArray
 }
+
+func (col column) AsString() []string {
+	arr := make([]string, len(col.cells))
+	for k, v := range col.cells {
+		arr[k] = v.String()
+	}
+	return arr
+}
+
+func (col column) AsInt() []int {
+	arr := make([]int, len(col.cells))
+	for k, v := range col.cells {
+		x, _ := v.Int()
+		arr[k] = *x
+	}
+	return arr
+}
+
+func (col column) AsFloat() []float64 {
+	arr := make([]float64, len(col.cells))
+	for k, v := range col.cells {
+		x, _ := v.Float()
+		arr[k] = *x
+	}
+	return arr
+}
+
+func (col column) AsBool() []bool {
+	arr := make([]bool, len(col.cells))
+	for k, v := range col.cells {
+		x, _ := v.Bool()
+		arr[k] = *x
+	}
+	return arr
+}

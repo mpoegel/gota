@@ -546,6 +546,37 @@ func (df DataFrame) SubsetRows(subset interface{}) (*DataFrame, error) {
 	return &newDf, nil
 }
 
+// MapCol maps a column to a new column given a function
+func (df *DataFrame) MapCol(colName string, fnc func(v string) string) {
+	newColumns := []column{}
+	for _, v := range df.Columns {
+		if v.colName == colName {
+			newColStr := []string{}
+			for i := 0; i < len(v.cells); i++ {
+				newColStr = append(newColStr, fnc(v.cells[i].String()))
+			}
+			col, err := newCol(v.colName, Strings(newColStr))
+			if err != nil {
+				panic(err)
+			}
+			newColumns = append(newColumns, *col)
+		} else {
+			newColumns = append(newColumns, v)
+		}
+	}
+	df.Columns = newColumns
+}
+
+// GetColumn returns a pointer to the column in the Dataframe or nil if the column does not exist
+func (df *DataFrame) GetColumn(colName string) *column {
+	for _, col := range df.Columns {
+		if col.colName == colName {
+			return &col
+		}
+	}
+	return nil
+}
+
 // Rbind combines the rows of two dataframes
 func Rbind(a DataFrame, b DataFrame) (*DataFrame, error) {
 	dfa := a.copy()
